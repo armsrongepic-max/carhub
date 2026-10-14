@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carhub</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <h1 class="logo">Carhub</h1>
+  <ul>
+    <li><a href="#" id="homeLink">Home</a></li>
+    <li><a href="#" id="listingsLink">Listings</a></li>
+    <li><a href="#" id="aboutLink">About</a></li>
+    <li><a href="#" id="contactLink">Contact</a></li>
+    <li id="authButtons">
+      <a href="#" id="signupLink" class="btn-login">Sign Up</a>
+      <a href="#" id="loginLink" class="btn-login">Login</a>
+    </li>
+    <li id="userMenu" style="display:none;">
+      <span id="userGreeting"></span>
+      <a href="#" id="dashboardLink" class="btn-login">Dashboard</a>
+      <a href="#" id="logoutLink" class="btn-login">Logout</a>
+    </li>
+  </ul>
+</nav>
+
+
+<div class="modal" id="loginModal" style="display:none; position: fixed; top: 0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:1000;">
+  <div style="background:white; padding:25px; border-radius:8px; min-width:320px; max-width:420px;">
+    <h3>Login as Seller</h3>
+    <div style="margin-bottom:12px;">
+      <label for="loginName">Email</label>
+      <input type="email" id="loginName" style="width:100%; padding:8px;" placeholder="you@example.com" required>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label for="loginPassword">Password</label>
+      <input type="password" id="loginPassword" style="width:100%; padding:8px;" placeholder="Password" required>
+    </div>
+    <div style="display:flex; gap:8px; justify-content:flex-end;">
+      <button onclick="closeLoginModal()" style="padding:8px 14px;">Cancel</button>
+      <button onclick="confirmLogin()" style="padding:8px 14px; background:#0077ff; color:white; border:none;">Login</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="signupModal" style="display:none; position: fixed; top: 0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:1000;">
+  <div style="background:white; padding:25px; border-radius:8px; min-width:320px; max-width:420px;">
+    <h3>Sign Up</h3>
+    <div style="margin-bottom:12px;">
+      <label for="signupName">Name</label>
+      <input type="text" id="signupName" style="width:100%; padding:8px;" placeholder="Your name" required>
+    </div>
+    <div style="margin-bottom:12px;">
+      <label for="signupEmail">Email</label>
+      <input type="email" id="signupEmail" style="width:100%; padding:8px;" placeholder="you@example.com" required>
+    </div>
+    <div style="margin-bottom:12px;">
+      <label for="signupPhone">Phone</label>
+      <input type="tel" id="signupPhone" style="width:100%; padding:8px;" placeholder="+234 xxx xxx xxxx" required>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label for="signupPassword">Password</label>
+      <input type="password" id="signupPassword" style="width:100%; padding:8px;" placeholder="Create password" required>
+    </div>
+    <div style="display:flex; gap:8px; justify-content:flex-end;">
+      <button onclick="closeSignupModal()" style="padding:8px 14px;">Cancel</button>
+      <button onclick="confirmSignup()" style="padding:8px 14px; background:#0077ff; color:white; border:none;">Sign Up</button>
+    </div>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="overlay"></div>
+  <div class="hero-content">
+    <h1>Find Your Perfect Car</h1>
+    <h5>Affordable & Luxury Cars in One Place</h5>
+
+    <div class="search-box">
+      <input type="text" placeholder="Search brand (Toyota, BMW...)">
+      <select>
+        <option>Price Range</option>
+        <option>₦1M - ₦5M</option>
+        <option>₦5M - ₦10M</option>
+      </select>
+      <button onclick="searchCars()"><i class="fas fa-search"></i> Search</button>
+    </div>
+  </div>
+</section>
+
+<section class="cars">
+  <h2>Featured Cars</h2>
+
+  <div class="car-grid">
+
+    <div class="car-card">
+      <img src="picture1.jpg">
+      <div class="car-info"/.
+        <h3>Toyota Camry 2020</h3>
+        <p><i class="fas fa-map-marker-alt"></i> Lagos</p>
+        <span class="price">₦8,500,000</span>
+      </div>
+    </div>
+
+    <div class="car-card">
+      <img src="picture2.jpg">
+      <div class="car-info">
+        <h3>Mercedes Benz C300</h3>
+        <p><i class="fas fa-map-marker-alt"></i> Abuja</p>
+        <span class="price">₦18,000,000</span>
+      </div>
+    </div>
+
+    <div class="car-card">
+      <img src="picture3.jpg">
+      <div class="car-info">
+        <h3>Mercedes Benz C300</h3>
+        <p><i class="fas fa-map-marker-alt"></i> Abuja</p>
+        <span class="price">₦18,000,000</span>
+      </div>
+    </div>
+
+    <div class="car-card">
+      <img src="picture4.jpg">
+      <div class="car-info">
+        <h3>Honda Civic 2021</h3>
+        <p><i class="fas fa-map-marker-alt"></i> Lagos</p>
+        <span class="price">₦6,200,000</span>
+      </div>
+    </div>
+
+    <div class="car-card">
+      <img src="picture5.jpg">
+      <div class="car-info">
+        <h3>BMW X3 2019</h3>
+        <p><i class="fas fa-map-marker-alt"></i> Port Harcourt</p>
+        <span class="price">₦12,500,000</span>
+      </div>
+    </div>
+
+    <div class="car-card">
+      <img src="picture6.jpg">
+      <div class="car-info">
+        <h3>Lexus RX 2022</h3>
+        <p><i class="fas fa-map-marker-alt"></i> Abuja</p>
+        <span class="price">₦28,000,000</span>
+      </div>
+    </div>
+
+    <div class="car-card">
+      <img src="picture7.jpg">
+      <div class="car-info">
+        <h3>Ford Explorer 2020</h3>
+        <p><i class="fas fa-map-marker-alt"></i> Kano</p>
+        <span class="price">₦15,800,000</span>
+      </div>
+    </div>
+
+    <div class="car-card">
+      <img src="picture8.jpg">
+      <div class="car-info">
+        <h3>Nissan Altima 2021</h3>
+        <p><i class="fas fa-map-marker-alt"></i> Lagos</p>
+        <span class="price">₦7,500,000</span>
+      </div>
+    </div>
+
+    <div class="car-card">
+      <img src="picture9.jpg">
+      <div class="car-info">
+        <h3>Hyundai Tucson 2022</h3>
+        <p><i class="fas fa-map-marker-alt"></i> Ibadan</p>
+        <span class="price">₦9,200,000</span>
+      </div>
+    </div>
+
+    <div class="car-card">
+      <img src="picture10.jpg">
+      <div class="car-info">
+        <h3>Kia Sportage 2021</h3>
+        <p><i class="fas fa-map-marker-alt"></i> Enugu</p>
+        <span class="price">₦8,900,000</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="cta">
+matkinsemmanuel @gmail.com <h2>Want to Sell Your Car?</h2>
+  <p>List your car in minutes and reach thousands of buyers</p>
+  <button>Post Your Car</button>
+</section>
+
+<section class="contact-section">
+  <h2>Get in Touch</h2>
+  <form id="contactForm" onsubmit="handleContactSubmit(event)">
+    <input type="text" id="contactName" placeholder="Your Name" required>
+    <input type="email" id="contactEmail" placeholder="Your Email" required>
+    <textarea id="contactMessage" placeholder="Your Message" rows="5" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</section>
+
+<footer>
+  <p>© 2026 Carhub. All rights reserved.</p>
+  <div class="footer-links">
+    <a href="#" onclick="contactViaWhatsApp()">Contact via WhatsApp</a> | 
+    <a href="mailto:matkinsemmanuel@gmail.com">Contact via Email</a> | 
+    <a href="https://wa.me/2348110597222" target="_blank">+234 811 059 7222</a> | 
+    <a href="#">Privacy Policy</a> | 
+    <a href="#">Terms of Service</a>
+  </div>
+</footer>
+
+<button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
+  <i class="fas fa-moon"></i>
+</button>
+
+<script src="app.js"></script>
+</body>
+</html>

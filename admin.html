@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Carhub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #0077ff;
+      padding-bottom: 15px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 12px 20px;
+      cursor: pointer;
+      font-size: 1rem;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+      color: #555;
+    }
+
+    .tab-btn.active {
+      border-bottom-color: #0077ff;
+      color: #0077ff;
+      font-weight: bold;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-section {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: #0077ff;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #0055cc;
+    }
+
+    .btn-danger {
+      background: #f44336;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #da190b;
+    }
+
+    .btn-secondary {
+      background: #666;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #555;
+    }
+
+    .cars-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .cars-table th {
+      background: #0077ff;
+      color: white;
+      padding: 15px;
+      text-align: left;
+    }
+
+    .cars-table td {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .cars-table tr:hover {
+      background: #f5f5f5;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .stat-card h3 {
+      color: #666;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .stat-card .number {
+      font-size: 2.5rem;
+      color: #0077ff;
+      font-weight: bold;
+    }
+
+    body.dark-mode .form-section,
+    body.dark-mode .cars-table,
+    body.dark-mode .stat-card {
+      background: #2a2a2a;
+      color: #e0e0e0;
+    }
+
+    body.dark-mode .cars-table th {
+      background: #005a8c;
+    }
+
+    body.dark-mode .cars-table tr:hover {
+      background: #333;
+    }
+
+    body.dark-mode .form-group input,
+    body.dark-mode .form-group select,
+    body.dark-mode .form-group textarea {
+      background: #333;
+      color: white;
+      border-color: #555;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <h1>Carhub Admin Panel</h1>
+  <ul>
+    <li><a href="index.html">Back to Home</a></li>
+    <li><a href="#" class="btn-login" onclick="logout()">Logout</a></li>
+  </ul>
+</nav>
+
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>Welcome, Admin!</h1>
+    <div id="adminUser"></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('dashboard')">Dashboard</button>
+    <button class="tab-btn" onclick="switchTab('add-car')">Add Car</button>
+    <button class="tab-btn" onclick="switchTab('manage-cars')">Manage Cars</button>
+  </div>
+
+ 
+  <div id="dashboard" class="tab-content active">
+    <div class="stats" id="stats"></div>
+    <div class="form-section">
+      <h2>System Overview</h2>
+      <p>Welcome to the Carhub Admin Panel. From here you can manage all car listings and view system statistics.</p>
+    </div>
+  </div>
+
+
+  <div id="add-car" class="tab-content">
+    <div class="form-section">
+      <h2>Add New Car</h2>
+      <form id="addCarForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Brand</label>
+            <input type="text" id="brand" placeholder="e.g., Toyota" required>
+          </div>
+          <div class="form-group">
+            <label>Model</label>
+            <input type="text" id="model" placeholder="e.g., Camry 2020" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Price (₦)</label>
+            <input type="number" id="price" placeholder="8500000" required>
+          </div>
+          <div class="form-group">
+            <label>Year</label>
+            <input type="number" id="year" placeholder="2020" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Mileage</label>
+            <input type="text" id="mileage" placeholder="e.g., 15,000 km" required>
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <select id="location" required>
+              <option value="">Select Location</option>
+              <option value="Lagos">Lagos</option>
+              <option value="Abuja">Abuja</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Transmission</label>
+            <select id="transmission" required>
+              <option value="">Select Transmission</option>
+              <option value="Automatic">Automatic</option>
+              <option value="Manual">Manual</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Fuel Type</label>
+            <select id="fuel" required>
+              <option value="">Select Fuel Type</option>
+              <option value="Petrol">Petrol</option>
+              <option value="Diesel">Diesel</option>
+              <option value="Hybrid">Hybrid</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Image URL</label>
+          <input type="text" id="image" placeholder="e.g., picture1.jpg" required>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="description" placeholder="Car description" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Car</button>
+      </form>
+    </div>
+  </div>
+
+ 
+  <div id="manage-cars" class="tab-content">
+    <div class="form-section">
+      <h2>Car Listings</h2>
+      <table class="cars-table">
+        <thead>
+          <tr>
+            <th>Brand</th>
+            <th>Model</th>
+            <th>Price</th>
+            <th>Location</th>
+            <th>Year</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="carsList"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
+  <i class="fas fa-moon"></i>
+</button>
+
+<script>
+
+let adminCars = JSON.parse(localStorage.getItem('adminCars')) || [];
+const adminUser = localStorage.getItem('adminUser') || 'Admin User';
+
+function switchTab(tabName) {
+
+  document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+
+  document.getElementById(tabName).classList.add('active');
+  event.target.classList.add('active');
+
+  if (tabName === 'dashboard') {
+    updateStats();
+  } else if (tabName === 'manage-cars') {
+    displayCars();
+  }
+}
+
+function updateStats() {
+  const statsDiv = document.getElementById('stats');
+  statsDiv.innerHTML = `
+    <div class="stat-card">
+      <h3>Total Cars</h3>
+      <div class="number">${adminCars.length}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Total Reviews</h3>
+      <div class="number">${JSON.parse(localStorage.getItem('carReviews') || '[]').length}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Favorites</h3>
+      <div class="number">${JSON.parse(localStorage.getItem('carhubFavorites') || '[]').length}</div>
+    </div>
+  `;
+}
+
+function addCar(e) {
+  e.preventDefault();
+
+  const car = {
+    id: adminCars.length + 1,
+    brand: document.getElementById('brand').value,
+    model: document.getElementById('model').value,
+    price: parseInt(document.getElementById('price').value),
+    year: parseInt(document.getElementById('year').value),
+    mileage: document.getElementById('mileage').value,
+    location: document.getElementById('location').value,
+    transmission: document.getElementById('transmission').value,
+    fuel: document.getElementById('fuel').value,
+    image: document.getElementById('image').value,
+    description: document.getElementById('description').value
+  };
+
+  adminCars.push(car);
+  localStorage.setItem('adminCars', JSON.stringify(adminCars));
+  
+  
+  let mainCars = JSON.parse(localStorage.getItem('mainCars') || '[]');
+  mainCars.push(car);
+  localStorage.setItem('mainCars', JSON.stringify(mainCars));
+
+  alert('Car added successfully!');
+  document.getElementById('addCarForm').reset();
+}
+
+function deleteCar(id) {
+  if (confirm('Are you sure you want to delete this car?')) {
+    adminCars = adminCars.filter(car => car.id !== id);
+    localStorage.setItem('adminCars', JSON.stringify(adminCars));
+    displayCars();
+    alert('Car deleted!');
+  }
+}
+
+function displayCars() {
+  const carsList = document.getElementById('carsList');
+  carsList.innerHTML = adminCars.map(car => `
+    <tr>
+      <td>${car.brand}</td>
+      <td>${car.model}</td>
+      <td>₦${car.price.toLocaleString()}</td>
+      <td>${car.location}</td>
+      <td>${car.year}</td>
+      <td>
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="editCar(${car.id})">Edit</button>
+          <button class="btn btn-danger" onclick="deleteCar(${car.id})">Delete</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function editCar(id) {
+  alert('Edit feature coming soon!');
+}
+
+function logout() {
+  localStorage.removeItem('adminUser');
+  window.location.href = 'index.html';
+}
+
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  const isDarkMode = document.body.classList.contains('dark-mode');
+  localStorage.setItem('carhubDarkMode', isDarkMode);
+}
+
+function loadDarkMode() {
+  const isDarkMode = localStorage.getItem('carhubDarkMode') === 'true';
+  if (isDarkMode) {
+    document.body.classList.add('dark-mode');
+  }
+}
+
+
+if (!adminUser) {
+  alert('Unauthorized. Please login as admin.');
+  window.location.href = 'index.html';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('addCarForm').addEventListener('submit', addCar);
+  document.getElementById('adminUser').textContent = `Logged in as: ${adminUser}`;
+  loadDarkMode();
+  updateStats();
+});
+</script>
+</body>
+</html>

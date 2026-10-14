@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carhub Database Viewer</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; border-bottom: 2px solid #0077ff; padding-bottom: 10px; }
+        .section { margin: 30px 0; }
+        .section h2 { color: #0077ff; margin-bottom: 15px; }
+        .data-item { background: #f9f9f9; padding: 15px; margin: 10px 0; border-left: 4px solid #0077ff; border-radius: 4px; }
+        .data-key { font-weight: bold; color: #333; }
+        .data-value { color: #666; margin-top: 5px; }
+        .array-item { margin-left: 20px; padding: 8px; background: #fff; border: 1px solid #ddd; margin-bottom: 5px; }
+        .empty { color: #999; font-style: italic; }
+        .refresh-btn { background: #0077ff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-bottom: 20px; }
+        .refresh-btn:hover { background: #0056cc; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚗 Carhub Database Viewer</h1>
+        <button class="refresh-btn" onclick="location.reload()">🔄 Refresh Data</button>
+
+        <div class="section">
+            <h2>📊 Current Data Storage</h2>
+            <p><strong>Storage Type:</strong> Browser localStorage (Client-side)</p>
+            <p><strong>Location:</strong> Your browser's local storage for this domain</p>
+            <p><strong>Persistence:</strong> Data persists until cleared or browser data is deleted</p>
+        </div>
+
+        <div class="section">
+            <h2>👤 User Accounts</h2>
+            <div id="accountsData">Loading...</div>
+        </div>
+
+        <div class="section">
+            <h2>🚗 Car Listings</h2>
+            <div id="carsData">Loading...</div>
+        </div>
+
+        <div class="section">
+            <h2>⭐ Favorites</h2>
+            <div id="favoritesData">Loading...</div>
+        </div>
+
+        <div class="section">
+            <h2>📝 Reviews</h2>
+            <div id="reviewsData">Loading...</div>
+        </div>
+
+        <div class="section">
+            <h2>⚙️ Settings</h2>
+            <div id="settingsData">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        function displayData() {
+            
+            const accounts = JSON.parse(localStorage.getItem('carhubAccounts') || '[]');
+            document.getElementById('accountsData').innerHTML = accounts.length > 0
+                ? accounts.map(account => `<div class="data-item">
+                    <div class="data-key">Name:</div>
+                    <div class="data-value">${account.name}</div>
+                    <div class="data-key">Email:</div>
+                    <div class="data-value">${account.email}</div>
+                    <div class="data-key">Phone:</div>
+                    <div class="data-value">${account.phone}</div>
+                </div>`).join('')
+                : '<div class="empty">No user accounts registered yet</div>';
+
+           
+            const mainCars = JSON.parse(localStorage.getItem('mainCars') || '[]');
+            const sellerCars = JSON.parse(localStorage.getItem('sellerCars') || '[]');
+            const adminCars = JSON.parse(localStorage.getItem('adminCars') || '[]');
+            const allCars = [...mainCars, ...sellerCars, ...adminCars];
+
+            document.getElementById('carsData').innerHTML = allCars.length > 0
+                ? allCars.map((car, index) => `<div class="data-item">
+                    <div class="data-key">Car ${index + 1}:</div>
+                    <div class="data-value"><strong>${car.name || car.title}</strong></div>
+                    <div class="data-value">Price: ${car.price}</div>
+                    <div class="data-value">Location: ${car.location}</div>
+                    <div class="data-value">Description: ${car.description || 'N/A'}</div>
+                    <div class="data-value">Seller: ${car.seller || 'N/A'}</div>
+                </div>`).join('')
+                : '<div class="empty">No cars listed yet</div>';
+
+           
+            const favorites = JSON.parse(localStorage.getItem('carhubFavorites') || '[]');
+            document.getElementById('favoritesData').innerHTML = favorites.length > 0
+                ? favorites.map(fav => `<div class="data-item">
+                    <div class="data-value"><strong>${fav.name || fav.title}</strong> - ${fav.price}</div>
+                </div>`).join('')
+                : '<div class="empty">No favorites saved yet</div>';
+
+        
+            const reviews = JSON.parse(localStorage.getItem('carReviews') || '[]');
+            document.getElementById('reviewsData').innerHTML = reviews.length > 0
+                ? reviews.map(review => `<div class="data-item">
+                    <div class="data-key">Review for:</div>
+                    <div class="data-value">${review.carName}</div>
+                    <div class="data-key">Rating:</div>
+                    <div class="data-value">${'★'.repeat(review.rating)}</div>
+                    <div class="data-key">Comment:</div>
+                    <div class="data-value">${review.comment}</div>
+                    <div class="data-key">By:</div>
+                    <div class="data-value">${review.reviewer}</div>
+                </div>`).join('')
+                : '<div class="empty">No reviews submitted yet</div>';
+
+         
+            const settings = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (!['carhubAccounts', 'mainCars', 'sellerCars', 'adminCars', 'carhubFavorites', 'carReviews'].includes(key)) {
+                    const value = localStorage.getItem(key);
+                    settings.push(`<div class="data-item">
+                        <div class="data-key">${key}:</div>
+                        <div class="data-value">${value}</div>
+                    </div>`);
+                }
+            }
+            document.getElementById('settingsData').innerHTML = settings.length > 0
+                ? settings.join('')
+                : '<div class="empty">No additional settings stored</div>';
+        }
+
+    
+        displayData();
+    </script>
+</body>
+</html>
